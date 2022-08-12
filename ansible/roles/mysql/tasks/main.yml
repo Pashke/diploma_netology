@@ -1,0 +1,104 @@
+---
+# tasks file for mysql
+- name: install mysql
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - mysql-server
+    - python3-mysqldb
+
+- name: Start mysql
+  service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Create database
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present
+
+- name: Create user
+  mysql_user:
+    name: "{{ default_user }}"
+    password: "{{ default_password }}"
+    priv: "{{ db_name }}.*:ALL"
+    host: '%'
+    state: present
+
+- name: open access
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: '^bind-address'
+    line: 'bind-address = 0.0.0.0'
+    backup: yes
+
+- name: restart mysql
+  systemd:
+    state: restarted
+    name: mysql
+    enabled: yes
+    daemon_reload: yes
+
+- name: copy my.cnf
+  template:
+    src=templates/mysqld.cnf.j2
+    dest=/etc/mysql/mysql.conf.d/my.cnf
+
+- name: restart mysql
+  systemd:
+    state: restarted
+    name: mysql
+    enabled: yes
+    daemon_reload: yes
+
+- name: add user replication
+  mysql_user:
+    name: "{{ user_replication }}"
+    host: "%"
+    password: "{{ user_replication_pass }}"
+    priv: "*.*:REPLICATION SLAVE,REPLICATION CLIENT"
+    state: present
+  when:
+    - master == 1
+
+- name: check slave replication status
+  mysql_replication:
+    mode: getreplica
+  register: slave_status
+  when:
+    - master == 0
+
+- name: check master replication status
+  mysql_replication:
+    mode=getprimary
+  delegate_to: "{{ ip_db01 }}"
+  register: master_status
+  when:
+    - (slave_status.Is_Replica is defined and not slave_status.Is_Replica) or (slave_status.Is_Replica is not defined and slave_status is failed)
+    - master == 0
+
+- name: configure replication on the slave
+  mysql_replication:
+    mode: changeprimary
+    primary_host: "{{ ip_db01 }}"
+    primary_user: "{{ user_replication }}"
+    primary_password: "{{ user_replication_pass }}"
+    primary_log_file: "{{ master_status.File }}"
+    primary_log_pos: "{{ master_status.Position }}"
+  when:
+    - (slave_status.Is_Replica is defined and not slave_status.Is_Replica) or (slave_status.Is_Replica is not defined and slave_status is failed)
+    - master == 0
+
+- name: Start replica
+  mysql_replication:
+    mode: startreplica
+
+- name: restart mysql
+  systemd:
+    name: mysql
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

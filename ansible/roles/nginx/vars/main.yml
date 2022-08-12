@@ -1,0 +1,8 @@
+---
+# vars file for nginx_role
+wordpress_domain: "{{ domain }}"
+wordpress_domain_www: "www.{{ domain }}"
+gitlab_domain: "gitlab.{{ domain }}"
+grafana_domain: "grafana.{{ domain }}"
+prometheus_domain: "prometheus.{{ domain }}"
+alertmanager_domain: "alertmanager.{{ domain }}"

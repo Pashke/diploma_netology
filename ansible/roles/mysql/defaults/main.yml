@@ -1,0 +1,7 @@
+---
+# defaults file for mysql
+default_user: wordpress
+default_password: wordpress
+db_name: wordpress
+user_replication: replica
+user_replication_pass: replica

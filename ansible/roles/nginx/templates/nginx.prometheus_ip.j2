@@ -1,0 +1,16 @@
+upstream prometheus {
+    server {{ ip_prometheus }};
+}
+
+server {
+    listen 80;
+    server_name {{ prometheus_domain }};
+    access_log /var/log/nginx/{{ prometheus_domain }}-access.log;
+    error_log /var/log/nginx/{{ prometheus_domain }}-error.log;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}

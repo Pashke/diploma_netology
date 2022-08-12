@@ -1,0 +1,8 @@
+---
+- name: Install Nginx and LetsEncrypt
+  hosts: nginx
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - nginx

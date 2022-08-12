@@ -1,0 +1,49 @@
+---
+# tasks file for nginx_role
+#   Обновляем пакеты и ставим необходимое ПО
+- name: Update all packages to their latest version
+  ansible.builtin.apt:
+    name: "*"
+    update_cache: yes
+    state: latest
+
+- name: add repository certbot
+  ansible.builtin.apt_repository:
+    repo: 'ppa:certbot/certbot'
+
+- name: Install
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - nginx
+    - certbot
+    - python3-certbot-nginx
+    - ansible
+
+#   Выполняем доп настройки для nginx
+- name: Remove default nginx config
+  file:
+    name: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Copy nginx config
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Copy wordpress nginx config
+  template:
+    src: templates/nginx.wordpress.j2
+    dest: /etc/nginx/sites-enabled/wordpress
+
+#   Добавляем сертификаты
+- name: Get certificates
+  ansible.builtin.shell: sudo certbot -n --test-cert --nginx -d blld.site -d www.blld.site -m 19tipok88@gmail.com --agree-tos
+
+#   Перезапуск nginx
+- name: reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
