@@ -1,0 +1,7 @@
+- name: Install Apache and WordPress
+  hosts: app
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - wordpress

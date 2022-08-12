@@ -16,3 +16,8 @@
   lineinfile:
     path: /etc/hosts
     line: "{{ ip_db02 }} db02 db02.{{ domain }}"
+
+- name: Update hosts wordpress
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_app }} app app.{{ domain }}"

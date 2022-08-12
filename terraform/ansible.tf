@@ -25,16 +25,16 @@ resource "null_resource" "mysql" {
   ]
 }
 
-#resource "null_resource" "wordpress" {
-#  provisioner "local-exec" {
-#    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/wordpress.yml"
-#  }
-#
-# depends_on = [
-#    null_resource.mysql
-#  ]
-#}
-#
+resource "null_resource" "wordpress" {
+  provisioner "local-exec" {
+    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/wordpress.yml"
+  }
+
+ depends_on = [
+    null_resource.mysql
+  ]
+}
+
 #resource "null_resource" "gitlab" {
 #  provisioner "local-exec" {
 #    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/gitlab.yml"

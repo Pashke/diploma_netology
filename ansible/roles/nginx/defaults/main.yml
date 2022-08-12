@@ -1,7 +1,7 @@
 ---
 # defaults file for nginx_role
 domain: ""
-ip_wordpress: "192.168.10.14"
+ip_wordpress: ""
 ip_gitlab: ""
 ip_grafana: ""
 ip_prometheus: ""

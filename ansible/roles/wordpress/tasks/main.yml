@@ -1,2 +1,73 @@
 ---
 # tasks file for wordpress
+- name: Install
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - apache2
+    - php
+    - libapache2-mod-php
+    - php-mysql
+    - php-curl
+    - php-gd
+    - php-mbstring
+    - php-xml
+    - php-xmlrpc
+    - php-soap
+    - php-intl
+    - php-zip
+
+- name: Create the directory for your_domain
+  file:
+    name: "/var/www/{{ your_domain }}"
+    state: directory
+    owner: "www-data"
+    group: "www-data"
+    mode: '0755'
+
+- name: bare-bones configuration
+  template:
+    src: "templates/test.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ your_domain }}.conf"
+
+- name: enable the new virtual host
+  shell: a2ensite {{ your_domain }}
+
+- name: disable the default website
+  shell: a2dissite 000-default
+
+- name: enable mod_rewrite
+  shell: a2enmod rewrite
+
+- name: restart apache
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
+
+- name: download and unpacking WordPress
+  unarchive:
+    src: https://wordpress.org/latest.tar.gz
+    dest: "/var/www/{{ your_domain }}"
+    remote_src: yes
+    creates: "/var/www/{{ your_domain }}/wordpress"
+
+- name: chown www-data
+  file:
+    name: "/var/www/{{ your_domain }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+
+- name: chmod 750
+  shell: "find /var/www/{{ your_domain }}/wordpress/ -type d -exec chmod 750 {} \\;"
+
+- name: chmod 640
+  shell: "find /var/www/{{ your_domain }}/wordpress/ -type f -exec chmod 640 {} \\;"
+
+- name: copy wp-config.php
+  template:
+    src: "templates/wp-config.php.j2"
+    dest: "/var/www/{{ your_domain }}/wordpress/wp-config.php"

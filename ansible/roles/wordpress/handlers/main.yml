@@ -1,2 +1,11 @@
 ---
 # handlers file for wordpress
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+- name: restart php5-fpm
+  service:
+    name: php5-fpm
+    state: restarted
