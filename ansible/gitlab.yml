@@ -1,0 +1,8 @@
+---
+- name: Install Gitlab
+  hosts: gitlab
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - gitlab

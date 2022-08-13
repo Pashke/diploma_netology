@@ -35,16 +35,26 @@ resource "null_resource" "wordpress" {
   ]
 }
 
-#resource "null_resource" "gitlab" {
-#  provisioner "local-exec" {
-#    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/gitlab.yml"
-#  }
-#
-# depends_on = [
-#    null_resource.app
-#  ]
-#}
-#
+resource "null_resource" "gitlab" {
+  provisioner "local-exec" {
+    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/gitlab.yml"
+  }
+
+ depends_on = [
+    null_resource.wordpress
+  ]
+}
+
+resource "null_resource" "runner" {
+  provisioner "local-exec" {
+    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/runner.yml"
+  }
+
+ depends_on = [
+    null_resource.gitlab
+  ]
+}
+
 #resource "null_resource" "monitoring" {
 #  provisioner "local-exec" {
 #    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/monitoring.yml"

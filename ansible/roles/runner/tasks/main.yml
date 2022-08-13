@@ -1,0 +1,45 @@
+---
+# tasks file for runner
+- name: Install
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: latest
+  with_items:
+    - git
+
+- name: download the binaries
+  command: 'curl -L --output /usr/local/bin/gitlab-runner "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"'
+
+- name: Give it permissions to execute
+  command: 'chmod +x /usr/local/bin/gitlab-runner'
+
+- name: Create a GitLab CI user
+  command: 'useradd --comment ''GitLab Runner'' --create-home gitlab-runner --shell /bin/bash'
+
+- name: Create directory .ssh
+  file:
+    name: /home/runner/.ssh/
+    state: directory
+
+- name: Copy ssh-key
+  copy:
+    src: files/{{ item }}
+    dest: /home/runner/.ssh/
+  with_items:
+    - id_rsa.pub
+    - id_rsa
+
+- name: Install service
+  command: 'gitlab-runner install --user=gitlab-runner --working-directory=/home/gitlab-runner'
+
+- name: run service
+  command: 'gitlab-runner start'
+
+- name: One-line registration command
+  shell: gitlab-runner register \
+    --non-interactive \
+    --url "http://gitlab.{{ domain }}/" \
+    --registration-token "{{ gitlab_token }}" \
+    --executor "shell"
+

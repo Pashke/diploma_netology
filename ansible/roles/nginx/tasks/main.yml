@@ -38,6 +38,11 @@
     src: templates/nginx.wordpress.j2
     dest: /etc/nginx/sites-enabled/wordpress
 
+- name: Copy gitlab nginx config
+  template:
+    src: templates/nginx.gitlab.j2
+    dest: /etc/nginx/sites-enabled/gitlab
+
 #   Добавляем сертификаты
 - name: Get certificates
   ansible.builtin.shell: sudo certbot -n --test-cert --nginx -d blld.site -d www.blld.site -m 19tipok88@gmail.com --agree-tos

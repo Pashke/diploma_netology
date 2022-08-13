@@ -28,9 +28,9 @@ resource "yandex_compute_instance" "nginx" {
     ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-  scheduling_policy {
-    preemptible = true
-  }
+#  scheduling_policy {
+#    preemptible = true
+#  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "mysql" {
@@ -63,9 +63,9 @@ resource "yandex_compute_instance" "mysql" {
     ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-  scheduling_policy {
-    preemptible = true
-  }
+#  scheduling_policy {
+#    preemptible = true
+#  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "wordpress" {
@@ -97,9 +97,9 @@ resource "yandex_compute_instance" "wordpress" {
     ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
   }
 
-  scheduling_policy {
-    preemptible = true
-  }
+#  scheduling_policy {
+#    preemptible = true
+#  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "gitlab" {
@@ -131,9 +131,9 @@ resource "yandex_compute_instance" "gitlab" {
     ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
   }
 
-  scheduling_policy {
-    preemptible = true
-  }
+#  scheduling_policy {
+#    preemptible = true
+#  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "runner" {
@@ -165,8 +165,8 @@ resource "yandex_compute_instance" "runner" {
     ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
   }
 
-  scheduling_policy {
-    preemptible = true
-  }
+#  scheduling_policy {
+#    preemptible = true
+#  }
 }
 #-----------------------------------------------------------------------------------------------------------------------

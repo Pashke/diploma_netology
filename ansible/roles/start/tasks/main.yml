@@ -2,10 +2,10 @@
 - name: Wait start
   ansible.builtin.wait_for_connection:
 
-#- name: Update hosts nginx
-#  lineinfile:
-#    path: /etc/hosts
-#    line: "{{ ip_nginx }} nginx www.{{ domain }}"
+- name: Update hosts nginx
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_nginx }} nginx www.{{ domain }}"
 
 - name: Update hosts db01
   lineinfile:
@@ -21,3 +21,13 @@
   lineinfile:
     path: /etc/hosts
     line: "{{ ip_app }} app app.{{ domain }}"
+
+- name: Update hosts gitlab
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_gitlab }} gitlab gitlab.{{ domain }}"
+
+- name: Update hosts runner
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_runner }} runner runner.{{ domain }}"

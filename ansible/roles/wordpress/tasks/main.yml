@@ -18,6 +18,7 @@
     - php-soap
     - php-intl
     - php-zip
+    - git
 
 - name: Create the directory for your_domain
   file:
@@ -71,3 +72,31 @@
   template:
     src: "templates/wp-config.php.j2"
     dest: "/var/www/{{ your_domain }}/wordpress/wp-config.php"
+
+- name: Add user for gitlab runner
+  ansible.builtin.user:
+    name: runner
+
+- name: Add runner sudo
+  user:
+    name=runner
+    groups=sudo
+    append=yes
+    state=present
+
+- name: Allow gitlab_runner user to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^runner'
+    line: 'runner ALL=(ALL) NOPASSWD: ALL'
+
+- name: Create directory for runner authorized_keys
+  file:
+    name: /home/runner/.ssh/
+    state: directory
+
+- name: Copy authorized_keys file
+  copy:
+    src: files/authorized_keys
+    dest: /home/runner/.ssh/
