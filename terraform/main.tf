@@ -21,7 +21,7 @@ resource "yandex_compute_instance" "nginx" {
   network_interface {
     subnet_id       = yandex_vpc_subnet.public-subnet.id
     nat             = true
-    nat_ip_address  = "51.250.64.73"
+#    nat_ip_address  = "51.250.64.73"
   }
 
   metadata = {
