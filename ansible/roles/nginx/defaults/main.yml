@@ -3,6 +3,3 @@
 domain: ""
 ip_wordpress: ""
 ip_gitlab: ""
-ip_grafana: ""
-ip_prometheus: ""
-ip_alertmanager: ""

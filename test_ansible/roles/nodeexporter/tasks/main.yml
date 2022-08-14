@@ -1,0 +1,37 @@
+---
+# tasks file for nodeexporter
+- name: create user node_exporter
+  command: useradd --no-create-home --shell /bin/false node_exporter
+
+- name: download
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+
+- name: move binary
+  copy:
+    src: "/tmp/node_exporter-1.3.1.linux-amd64/node_exporter"
+    dest: "/usr/local/bin"
+    owner: "node_exporter"
+    group: "node_exporter"
+    mode: 0755
+    remote_src: yes
+
+- name: remove directory tmp
+  command: rm -rf /tmp/node_exporter-1.3.1.linux-amd64
+
+- name: install service
+  template:
+    src: node_exporter.service.j2
+    dest: /etc/systemd/system/node_exporter.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: started service
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes

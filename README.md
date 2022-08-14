@@ -8,5 +8,28 @@
 5. Установить WordPress.
 6. Развернуть Gitlab CE и Gitlab Runner.
 7. Настроить CI/CD для автоматического развёртывания приложения.
-8. Настроить мониторинг инфраструктуры с помощью стека: Prometheus, Alert Manager и Grafana.
+8. Настроить мониторинг инфраструктуры с помощью стека: Prometheus, Alert Manager и Grafana.  
+
+## Описание
+1. Зарегестрировано доменное имя blld.site на reg.ru
+![](picture/1.1.png)
+
+Управление доменом передано YC, записи dns создаются в terraform
+![](picture/1.2.png)
+
+2. Вся инфрастуктура разворачивается с помощью Terraform в течение минут 30+, самый долгий этап gitlab (до 15 минут). 
+Необходимые параметры заполняются в variables.tf и inventory.tf в vars.
+![](picture/2.2.png)
+
+В качестве backend выбран S3 bucket в YC.
+![](picture/2.1.png)
+
+3. Для маршрутизации использовался image с NAT от YC и настроена таблица маршрутизации. Маршрутизация настраивается
+в terraform. На него уже устанавливался nginx для Reverse Proxy
+![](picture/3.1.png)
+
+Сертификаты  
+![](picture/3.2.png)  
+
+![](picture/3.3.png)
 

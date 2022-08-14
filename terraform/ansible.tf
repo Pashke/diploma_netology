@@ -55,12 +55,12 @@ resource "null_resource" "runner" {
   ]
 }
 
-#resource "null_resource" "monitoring" {
-#  provisioner "local-exec" {
-#    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/monitoring.yml"
-#  }
-#
-#  depends_on = [
-#    null_resource.gitlab
-#  ]
-#}
+resource "null_resource" "monitoring" {
+  provisioner "local-exec" {
+    command = "ANSIBLE_FORCE_COLOR=1 ansible-playbook -i ../ansible/inventory ../ansible/monitoring.yml"
+  }
+
+  depends_on = [
+    null_resource.runner
+  ]
+}

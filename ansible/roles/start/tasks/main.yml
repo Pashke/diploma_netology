@@ -31,3 +31,8 @@
   lineinfile:
     path: /etc/hosts
     line: "{{ ip_runner }} runner runner.{{ domain }}"
+
+- name: Update hosts monitoring
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ ip_monitoring }} monitoring monitoring.{{ domain }}"

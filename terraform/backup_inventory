@@ -51,7 +51,6 @@ resource "local_file" "inventory" {
     ip_app=${yandex_compute_instance.wordpress.network_interface.0.ip_address}
     ip_gitlab=${yandex_compute_instance.gitlab.network_interface.0.ip_address}
     ip_runner=${yandex_compute_instance.runner.network_interface.0.ip_address}
-    ip_monitoring=${yandex_compute_instance.monitoring.network_interface.0.ip_address}
     EOT
   filename        = "../ansible/inventory"
   file_permission = "0777"
@@ -59,9 +58,6 @@ resource "local_file" "inventory" {
   depends_on = [
     yandex_compute_instance.nginx,
     yandex_compute_instance.mysql,
-    yandex_compute_instance.wordpress,
-    yandex_compute_instance.gitlab,
-    yandex_compute_instance.runner,
-    yandex_compute_instance.monitoring
+    yandex_compute_instance.wordpress
   ]
 }

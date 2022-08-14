@@ -28,9 +28,9 @@ resource "yandex_compute_instance" "nginx" {
     ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-#  scheduling_policy {
-#    preemptible = true
-#  }
+  scheduling_policy {
+    preemptible = true
+  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "mysql" {
@@ -63,9 +63,9 @@ resource "yandex_compute_instance" "mysql" {
     ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-#  scheduling_policy {
-#    preemptible = true
-#  }
+  scheduling_policy {
+    preemptible = true
+  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "wordpress" {
@@ -94,12 +94,12 @@ resource "yandex_compute_instance" "wordpress" {
   }
 
   metadata = {
-    ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-#  scheduling_policy {
-#    preemptible = true
-#  }
+  scheduling_policy {
+    preemptible = true
+  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "gitlab" {
@@ -128,12 +128,12 @@ resource "yandex_compute_instance" "gitlab" {
   }
 
   metadata = {
-    ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-#  scheduling_policy {
-#    preemptible = true
-#  }
+  scheduling_policy {
+    preemptible = true
+  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
 resource "yandex_compute_instance" "runner" {
@@ -162,11 +162,44 @@ resource "yandex_compute_instance" "runner" {
   }
 
   metadata = {
-    ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
   }
 
-#  scheduling_policy {
-#    preemptible = true
-#  }
+  scheduling_policy {
+    preemptible = true
+  }
 }
 #-----------------------------------------------------------------------------------------------------------------------
+resource "yandex_compute_instance" "monitoring" {
+  name                      = "monitoring"
+  zone                      = "ru-central1-a"
+  hostname                  = "monitoring.${var.domain}"
+  allow_stopping_for_update = true
+
+  resources {
+    cores  = 4
+    memory = 4
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = var.ubuntu-2004
+      name     = "root-monitoring-${terraform.workspace}"
+      type     = "network-nvme"
+      size     = "20"
+    }
+  }
+
+  network_interface {
+    subnet_id = yandex_vpc_subnet.private-subnet.id
+#    nat       = true
+  }
+
+  metadata = {
+    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+  }
+
+  scheduling_policy {
+    preemptible = true
+  }
+}

@@ -1,16 +1,5 @@
-[gitlab]
-gitlab ansible_host=192.168.10.16
+[monitoring]
+monitoring ansible_host=192.168.10.18
 
-[gitlab:vars]
+[monitoring:vars]
 ansible_ssh_common_args='-o ControlMaster=auto -o ControlPersist=10m -o ProxyCommand="ssh -W %h:%p -q ubuntu@51.250.64.73"'
-gitlab_password=slozHn1uPassw0rd
-gitlab_token=7376d76b-f9aa-439e-8df0-a386047c74c2
-domain=blld.site
-
-[runner]
-runner ansible_host=192.168.10.32
-
-[runner:vars]
-ansible_ssh_common_args='-o ControlMaster=auto -o ControlPersist=10m -o ProxyCommand="ssh -W %h:%p -q ubuntu@51.250.64.73"'
-gitlab_token=7376d76b-f9aa-439e-8df0-a386047c74c2
-domain=blld.site

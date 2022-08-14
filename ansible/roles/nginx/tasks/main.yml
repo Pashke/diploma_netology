@@ -43,9 +43,24 @@
     src: templates/nginx.gitlab.j2
     dest: /etc/nginx/sites-enabled/gitlab
 
+- name: Copy alertmanager nginx config
+  template:
+    src: templates/nginx.alertmanager.j2
+    dest: /etc/nginx/sites-enabled/alertmanager
+
+- name: Copy grafana nginx config
+  template:
+    src: templates/nginx.grafana.j2
+    dest: /etc/nginx/sites-enabled/grafana
+
+- name: Copy prometheus nginx config
+  template:
+    src: templates/nginx.prometheus.j2
+    dest: /etc/nginx/sites-enabled/prometheus
+
 #   Добавляем сертификаты
 - name: Get certificates
-  ansible.builtin.shell: sudo certbot -n --test-cert --nginx -d blld.site -d www.blld.site -m 19tipok88@gmail.com --agree-tos
+  ansible.builtin.shell: certbot certonly -n --nginx -d {{ domain }} -d www.{{ domain }} -d gitlab.{{ domain }} -d grafana.{{ domain }} -d prometheus.{{ domain }} -d alertmanager.{{ domain }} -m 19tipok88@gmail.com --agree-tos
 
 #   Перезапуск nginx
 - name: reload nginx

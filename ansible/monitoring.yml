@@ -1,0 +1,16 @@
+---
+- name: Install nodeexporter
+  hosts: allhosts
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - nodeexporter
+
+- name: Install Prometheus, Alert Manager and Grafana
+  hosts: monitoring
+  become: yes
+  become_user: root
+  remote_user: ubuntu
+  roles:
+   - monitoring
