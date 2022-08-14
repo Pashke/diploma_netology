@@ -19,13 +19,13 @@
 
 - name: Create directory .ssh
   file:
-    name: /home/runner/.ssh/
+    name: /home/gitlab-runner/.ssh/
     state: directory
 
 - name: Copy ssh-key
   copy:
     src: files/{{ item }}
-    dest: /home/runner/.ssh/
+    dest: /home/gitlab-runner/.ssh/
   with_items:
     - id_rsa.pub
     - id_rsa
@@ -43,3 +43,6 @@
     --registration-token "{{ gitlab_token }}" \
     --executor "shell"
 
+- name: delete .bash_logout
+  shell: >
+    rm /home/gitlab-runner/.bash_logout
